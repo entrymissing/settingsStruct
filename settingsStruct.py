@@ -1,43 +1,37 @@
 from os.path import dirname
 
-"""
-The settings struct that contains all paths and settings
-
-\package settingsStruct
-\file settingsStruct.py Settings Structure for parameter handling
-\author David Engel (entrymissing@gmail.com)
-\version 1.0
-"""
-
-
 class settingsStruct:
 	"""
-	A settings struct that can be generated from a file. Keys be accessed via the [] opertor. It is usable similar to a dict.
+	A settings parser parses a file and makes values available via keys through the [] opertor.
 	
-	The general structure of lines in the settings file is KEY - Value
+	The settings file needs to be structured as KEY = VALUE pairs
 	Empty lines and lines starting with # will be ignored
-	
-	General Usage is:
-
-	>>> settings = settingsStruct('example.ini')
-	>>> settings['CREATE']
-	True
-	
 	The values true,false,yes and no will be returned as boolean
 	Integer values will be returned as integers
-	lists can be added by starting new lines with +
+	String values need to be be sourrounded by ""
+	Examples can be found in the example.ini
 	
-	\author David Engel (entrymissing@gmail.com)
-	\version 1.0
+	Lists can be used as values by having only values (no keys in a line)
+	Example in an ini file:
+	LIST1 = "A String"
+			3
+			True
+	
+	would result in settings["LIST1"] = ["A String", 3, True]
+
+	General Usage is:
+	>>> settings = settingsStruct('example.ini')
+	>>> settings['BINARY_YES']
+	True
+	>>> settings['INTEGER_1']
+	1
+	>>> settings['STRING_1']
+	'A simple string'
+	
+	
+	author:: David Engel (entrymissing@gmail.com)
 	"""
 	def __init__( self, settingsFile ):
-		"""
-		Constructor of the settingsStruct class. Loads the settings from a file by calling parseSettingsFile
-	
-		\param settingsFile A filename pointing to the file containing the settings. If the file does not exist it will throw a file not found exception.
-		\author David Engel (entrymissing@gmail.com)
-		\version 1.0
-		"""
 		#parse the settingsFile
 		self.parseSettingsFile( settingsFile )
 	
@@ -53,13 +47,10 @@ class settingsStruct:
 
 	def parseSettingsFile( self, settingsFile):
 		"""
-		Parse the settings file. For a well formed settings file confer demoSettings.ini
+		Parse the settings file. For a well formed settings file confer example.ini
 		
-		Multiple calls to this function will overwrite previous settings. After calling the function values can be accesed via their keys
-	
-		\param settingsFile A filename pointing to the file containing the settings. If the file does not exist it will throw a file not found exception.
-		\author David Engel (entrymissing@gmail.com)
-		\version 1.0
+		Multiple calls to this function will overwrite previous settings.
+		After calling the function values can be accesed via their keys
 		"""
 		#init the settings dictonary
 		self.settings = dict()
@@ -124,19 +115,6 @@ class settingsStruct:
 
 
 	def getParam( self, key ):
-		"""
-		Retrieve a value for a key
-		
-		If the key is not in the dict an Exception will be raised
-		booleans will be returned as bool
-		Integers will be returend as ints
-		Lists will be returned as lists
-		Everything else will be returned as float
-	
-		\param key The key for which the value should be retrieved
-		\author David Engel (entrymissing@gmail.com)
-		\version 1.0
-		"""
 		#all keys are lowercase without trailing or leading whitespaces
 		key = key.strip().lower()
 
